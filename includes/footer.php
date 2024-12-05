@@ -9,7 +9,7 @@
             <a href="#" class="nav-link px-2 text-muted">Enlace sin contenido 2</a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link px-2 text-muted">Enlace sin contenido 2</a>
+            <a href="#" class="nav-link px-2 text-muted">Enlace sin contenido 1</a>
           </li>
         </ul>
         <p class="text-center text-muted">© <span id="anioCurso"></span><img class="mx-2" width="35" height="35" src="img/prog.png" alt="prog"> Alvaro Duran Amador <img class="mx-2" width="35" height="35" src="img/mail.png" alt="mail"> adurama436@g.educaand.es</p>
