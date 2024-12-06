@@ -1,6 +1,6 @@
 <!--Principal Tarea Online 2 DWES-->
 <?php require 'includes/header.php'; ?>
-
+<?php require_once 'config.php'; ?>
 <body>
 
     <!--Título-->
@@ -18,14 +18,14 @@
             <div class="mb-3">
                 <!--Usuario-->
                 <label for="usuario" class="form-label"> Usuario</label>
-                <input class="form-control" name="email" type="text" placeholder="Nombre usuario" aria-label="default input example">
-                <div id="email1" class="form-text"></div>
+                <div class="d-flex col"><input class="form-control" name="usuario" type="text" placeholder="Nombre usuario" aria-label="default input example"><img class="border rounded bg-body-secondary" src="img/user_login.png" width="40px" height="40px" /></div>
             </div>
 
             <!--Password-->
             <div class="mb-3">
                 <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" name="password">
+                <div class="d-flex col"><input class="form-control" name="password" type="text"><img class="border rounded bg-body-secondary" src="img/contrasena_login.png" width="40px" height="40px" /></div>
+                <!--<input type="password" class="form-control" name="password">-->
             </div>
             <button name="btningresar" type="submit" class="btn btn-primary">INICIAR SESION</button>
         </form>
