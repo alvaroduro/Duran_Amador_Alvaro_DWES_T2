@@ -15,4 +15,5 @@ try {
 } catch (PDOException $ex) {
     //Mostramos el posible error a la conexión
     echo '<div class="alert alert-danger">' . "No se pudo conectar a la Base de Datos de la Empresa!! :( <br/>" . $ex->getMessage() . '</div>';
+    die();
 }
