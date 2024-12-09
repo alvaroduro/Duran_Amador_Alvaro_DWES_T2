@@ -20,31 +20,42 @@ if (isset($_POST['btningresar'])) {
 
         // Generamos el listado de usuarios
         try {
-            //Conectamos en la BD y lo guardamos
+            // Escribimos la consulta
             $sql = "SELECT * FROM Profesores WHERE usuario = :usuario AND password = :password ";
+            // Preparamos la consulta
             $resultado = $conexion->prepare($sql);
-            //Comprobamos creedenciales
+            // Ejecutamos la consulta
             $resultado->execute(['usuario' => $usuarioInput, 'password' => $password]);
             //var_dump(!empty($fila = $resultado->fetch(PDO::FETCH_ASSOC)));
 
             //Si hay datos en la consulta
-            if (!empty($filas = $resultado->fetch(PDO::FETCH_ASSOC))) { ?>
-                <!--Mostramos alerta de creedenciales correctas-->
-                <script>
-                    swal("Creedenciales Correctas!", "Bienvenido", "success");
-                </script>
-            <?php
+            if (!empty($filas = $resultado->fetch(PDO::FETCH_ASSOC))) {
 
                 //Guardamos el rol del profesor
                 $rolUsuario = $filas['Rol'];
+                $nombre = $filas['Nombre']; 
+                $idProf = $filas['IdProf'];?>
 
-                // Redirigimos a listarLibros.php con el rol del usuario
-                header('Location: listarLibros.php?rol=' . $rolUsuario);
+                <!--Mostramos alerta de creedenciales correctas-->
+                <script>
+                    swal("Creedenciales Incorrectas!", "Bienvenido!!", "success");
+                </script>
+                <?php
+
+                // Redirigimos si es usuario o administrador
+                if ($rolUsuario == 0) {
+                    // Redirigimos a profesores con el rol del usuario
+                    header('Location: profesor.php?rol=' . $rolUsuario . '&&nombre=' . $nombre. '&&idProf='.$idProf);
+                } else {
+                    // Redirigimos a listarLibros.php con el rol del usuario
+                    header('Location: admin.php?rol=' . $rolUsuario . '&&nombre=' . $nombre);
+                }
+
 
                 //Si la consulta no se ha realizado corectamente
             } else {
                 // En caso de no existir datos de ese usuario
-            ?>
+                ?>
                 <!--Mostramos alerta de creedenciales Incorrectas-->
                 <script>
                     swal("Creedenciales Incorrectas!", "Usuario o contraseña no coinciden", "error");

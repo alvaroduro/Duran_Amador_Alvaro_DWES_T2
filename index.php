@@ -41,7 +41,7 @@
                     echo $msgresultadoCampo;
                 } ?> <!-- Mensaje de resultado campos vacíos-->
             </div>
-            <button name="btningresar" id="btnLogin" type="submit" class="btn btn-primary" data-bs-target="#exampleModal">INICIAR SESION</button>
+            <button name="btningresar" type="submit" class="btn btn-primary">INICIAR SESION</button>
         </form>
     </div>
     <?php require 'includes/footer.php'; ?>
