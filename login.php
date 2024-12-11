@@ -48,7 +48,7 @@ if (isset($_POST['btningresar'])) {
                     header('Location: profesor.php?rol=' . $rolUsuario . '&&nombre=' . $nombre. '&&idProf='.$idProf);
                 } else {
                     // Redirigimos a listarLibros.php con el rol del usuario
-                    header('Location: admin.php?rol=' . $rolUsuario . '&&nombre=' . $nombre);
+                    header('Location: admin.php?rol=' . $rolUsuario . '&&nombre=' . $nombre. '&&idProf='.$idProf);
                 }
 
 
