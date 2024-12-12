@@ -89,8 +89,8 @@ try {
                             <!--<td><?= $fila['IdEjemplar'] ?></td>-->
                             <td><?= $fila['ISBN'] ?></td>
                             <td><?= $fila['Titulo'] ?></td>
-                            <td><?=
-                                $fechaFormateada = date('m/Y', strtotime($fila['Fecha_Publicacion'])); //Convertimos la fecha al formato
+                            <td><?=//Convertimos la fecha al formato
+                                $fechaFormateada = date('m/Y', strtotime($fila['Fecha_Publicacion'])); 
                                 echo $fechaFormateada ?></td>
                             <td><?= $fila['Editorial'] ?></td>
                             <td><?= $fila['Descripcion'] ?></td>

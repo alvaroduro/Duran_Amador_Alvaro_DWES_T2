@@ -2,6 +2,7 @@
 <?php require 'includes/header.php'; ?>
 <?php require_once 'config.php'; ?>
 <?php require 'valAgregarLibro.php'; ?>
+<?php require 'verificarCampo.php'; ?>
 <?php if (isset($_GET['rol'])) {
     $rolUsuario = $_GET['rol']; // Obtenemos el Rol del usuario
     $nombre = $_GET['nombre']; //obtenemos el nombre
@@ -22,97 +23,107 @@
 </div>
 <!-- Modal para agregar libro -->
 <div class="container agregarLibro">
+    <!--Mostramos los posibles errores en los campos-->
     <?php echo validez($errores);
-    $imagen = null; //Definimos la variable a null ya que todavia no se ha cargado imagen
+
+    //Definimos la variable a null ya que todavia no se ha cargado imagen
+    $imagen = null; 
 
     //Si no hay errores imprimimos los valores almacenados
     if (isset($_POST["anadirLibro"]) && (count($errores) == 0)) {
-        
-        // Guardamos los datos para la insercción en la Base de Datos
-        $isbn = $_POST['isbn'];
+
+        //Comprobamos que no exista el título
         $titulo = $_POST['titulo'];
-        $fechaPubli = $_POST['fechaPubli'];
-        $editorial = $_POST['editorial'];
-        $descripcion = $_POST['descripcion'];
-        $precio = $_POST['precio'];
-        $autor = $_POST['autor'];
-        $estado = 0;
-        //Tratamos la imagen -Definimos su variable a null
-        //En caso de almacenar la img en la BD
-        $imagen = NULL;
 
-        //Comprobamos que el campo tmp_name tiene una valor asignado
-        //Y que hemos recibido la img correctamente
-        if (isset($_FILES['portada']) && (!empty($_FILES['portada']['tmp_name']))) {
-            //Comprobamos si existe el directorio img(si no, lo creamos)
-            if (!is_dir("img")) {
-                $imgDire = "directorio mal";
-                $dir = mkdir("img", 0777, true);
-            } else { //Si no, ponemos directorio a true
-                $dir = true;
-                $imgDire = "directorio bien";
-            }
-
-            //Verificamos que la carpeta de img existe y movemos el fichero a ella
-            if ($dir) {
-                //Aseguramos nombre único
-                $nombreImg = time() . "-" . $_FILES['portada']['name'];
-
-                //Movemos el archivo a nuestra carpeta
-                $moverImg = move_uploaded_file($_FILES['portada']['tmp_name'], "img/" . $nombreImg);
-                
-                // Definimos el nombre (ruta) de la imagen
-                $imagen = $nombreImg;
-
-                //Verificamos la carga si se ha realizado correctamente
-                if ($moverImg) { //En caso de que se haya movido bien
-                    $imagenCargada = true;
-                    $portada = "La portada nos ha llegado<br/>";
-                } else {
-                    $imagenCargada = false;
-                    $errores["portada"] = "Error al cargar la imagen";
-                }
-            }
+        //Si el título ya existe
+        if (verificarCampo($conexion, 'Titulo', 'libros', $titulo)) {
+            $msgresultado = '<div class="alert alert-danger">' .
+                "El título del libro ya existe!! :)" . '</div>';
         } else {
-            $errores["portada"] = "Error en portada, imagen vacía o no recibida";
-        }
+            // Guardamos los datos para la insercción en la Base de Datos
+            $isbn = $_POST['isbn'];
+            $fechaPubli = $_POST['fechaPubli'];
+            $editorial = $_POST['editorial'];
+            $descripcion = $_POST['descripcion'];
+            $precio = $_POST['precio'];
+            $autor = $_POST['autor'];
+            $estado = 0;
+            //Tratamos la imagen -Definimos su variable a null
+            //En caso de almacenar la img en la BD
+            $imagen = NULL;
 
-        // Mostramos una ventana modal con los datos del libro introducido al clicar un botón
-        require 'modal/modalAgregarLibro.php';
+            //Comprobamos que el campo tmp_name tiene una valor asignado
+            //Y que hemos recibido la img correctamente
+            if (isset($_FILES['portada']) && (!empty($_FILES['portada']['tmp_name']))) {
+                //Comprobamos si existe el directorio img(si no, lo creamos)
+                if (!is_dir("img")) {
+                    $imgDire = "directorio mal";
+                    $dir = mkdir("img", 0777, true);
+                } else { //Si no, ponemos directorio a true
+                    $dir = true;
+                    $imgDire = "directorio bien";
+                }
 
-        //Si no hay errores insertamos el libro en la Base de Datos
-        try {// Definimos la consulta
-            $sql = "INSERT INTO libros(ISBN,Titulo,Fecha_Publicacion,Editorial,Descripcion,Precio,Portada,Autor,Estado) VALUES (:ISBN,:Titulo,:Fecha_Publicacion,:Editorial,:Descripcion,:Precio,:Portada,:Autor,:Estado)";
+                //Verificamos que la carpeta de img existe y movemos el fichero a ella
+                if ($dir) {
+                    //Aseguramos nombre único
+                    $nombreImg = time() . "-" . $_FILES['portada']['name'];
 
-            //Preparamos
-            $query = $conexion->prepare($sql);
+                    //Movemos el archivo a nuestra carpeta
+                    $moverImg = move_uploaded_file($_FILES['portada']['tmp_name'], "img/" . $nombreImg);
 
-            //Ejecutamos con los valores obtenidos
-            $query->execute([
-                'ISBN' => $isbn,
-                'Titulo' => $titulo, 
-                'Fecha_Publicacion' => $fechaPubli, 
-                'Editorial' => $editorial, 
-                'Descripcion' => $descripcion, 
-                'Precio' => $precio, 
-                'Portada' => $imagen, 
-                'Autor' => $autor, 
-                'Estado' => $estado 
-            ]);
+                    // Definimos el nombre (ruta) de la imagen
+                    $imagen = $nombreImg;
 
-            // Supervisamos si se ha realizado correctamente
-            if($query) {
-                $msgresultado = '<div class="alert alert-success">' .  
-                "El Libro se registró correctamente en la Base de Datos!! :)" . '</div>'; 
-            }else {
-                $msgresultado = '<div class="alert alert-danger">' .  
-                "Datos de registro del libro erróneos!! :( (" . $ex->getMessage(). ')</div>'; 
-                //die();   
+                    //Verificamos la carga si se ha realizado correctamente
+                    if ($moverImg) { //En caso de que se haya movido bien
+                        $imagenCargada = true;
+                        $portada = "La portada nos ha llegado<br/>";
+                    } else {
+                        $imagenCargada = false;
+                        $errores["portada"] = "Error al cargar la imagen";
+                    }
+                }
+            } else {
+                $errores["portada"] = "Error en portada, imagen vacía o no recibida";
             }
 
-        }catch(PDOException $ex) {
-            $msgresultado = '<div class="alert alert-danger">' .  
-           "El Libro no pudo registrarse en la Base de Datos!! :( (" . $ex->getMessage(). ')</div>'; //die(); 
+            // Mostramos una ventana modal con los datos del libro introducido al clicar un botón
+            require 'modal/modalAgregarLibro.php';
+
+            //Si no hay errores insertamos el libro en la Base de Datos
+            try { // Definimos la consulta
+                $sql = "INSERT INTO libros(ISBN,Titulo,Fecha_Publicacion,Editorial,Descripcion,Precio,Portada,Autor,Estado) VALUES (:ISBN,:Titulo,:Fecha_Publicacion,:Editorial,:Descripcion,:Precio,:Portada,:Autor,:Estado)";
+
+                //Preparamos
+                $query = $conexion->prepare($sql);
+
+                //Ejecutamos con los valores obtenidos
+                $query->execute([
+                    'ISBN' => $isbn,
+                    'Titulo' => $titulo,
+                    'Fecha_Publicacion' => $fechaPubli,
+                    'Editorial' => $editorial,
+                    'Descripcion' => $descripcion,
+                    'Precio' => $precio,
+                    'Portada' => $imagen,
+                    'Autor' => $autor,
+                    'Estado' => $estado
+                ]);
+
+                // Supervisamos si se ha realizado correctamente
+                if ($query) {
+                    $msgresultado = '<div class="alert alert-success">' .
+                        "El Libro se registró correctamente en la Base de Datos!! :)" . '</div>';
+                } else {
+                    $msgresultado = '<div class="alert alert-danger">' .
+                        "Datos de registro del libro erróneos!! :( (" . $ex->getMessage() . ')</div>';
+                    //die();   
+                }
+            } catch (PDOException $ex) {
+                $msgresultado = '<div class="alert alert-danger">' .
+                    "El Libro no pudo registrarse en la Base de Datos!! :( (" . $ex->getMessage() . ')</div>'; //die(); 
+            }
         }
     }
 
@@ -175,11 +186,15 @@
         <!--Descripción-->
         <div class="form-group mb-3">
             <label for="descripcion" class="form-label">Descripción</label>
-            <textarea name="descripcion" class="form-control"> <?php if (isset($_POST["descripcion"])) {
-                                                                    echo $_POST["descripcion"];
-                                                                } ?> </textarea>
+            <textarea name="descripcion" class="form-control" id="descripcion"> <?php if (isset($_POST["descripcion"])) {
+                                                                                    echo $_POST["descripcion"];
+                                                                                } ?> </textarea>
             <?php echo  mostrar_error($errores, "descripcion"); ?>
         </div>
+        <!-- Inicializar CKEditor -->
+        <script>
+            CKEDITOR.replace('descripcion');
+        </script>
 
         <!--Precio-->
         <div class="form-group mb-3">
@@ -196,16 +211,16 @@
         <!--Portada-->
         <div class="form-group mb-3">
             <label for="portada" class="form-label">Portada</label>
-                <input type="file" name="portada" class="form-control"> 
-                <!--Si la imagen no es null mostramos la ultima imagen cargada-->
-                <?php if ($imagen != null) {
-                    echo '<div class="mt-2">';
-                    echo '<label>Última portada cargada:</label><br>';
-                    echo '<img src="img/'.$imagen . '" alt="Portada cargada" width="70" height="80">';                                      
-                    echo '</div>';
-                } ?>
-                <?php echo  mostrar_error($errores, "portada"); ?>
-            
+            <input type="file" name="portada" class="form-control">
+            <!--Si la imagen no es null mostramos la ultima imagen cargada-->
+            <?php if ($imagen != null) {
+                echo '<div class="mt-2">';
+                echo '<label>Última portada cargada:</label><br>';
+                echo '<img src="img/' . $imagen . '" alt="Portada cargada" width="70" height="80">';
+                echo '</div>';
+            } ?>
+            <?php echo  mostrar_error($errores, "portada"); ?>
+
         </div>
 
         <!------Autor------>
@@ -257,7 +272,6 @@
     </form>
     <!--// Creamos una función para mensaje de confirmacion con JS-->
     <script>
-        
         function confirmacion() {
 
             // Enlazamos con el DOOM de JS

@@ -30,7 +30,7 @@ if (isset($_GET['rol']) && isset($_GET['nombre'])) {
 
             <!-- Agregar, Editar o Eliminar libros disponibles pasando el rol, idProf y nombre-->
             <a href="listarUsuarios.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>" class="btn btn-dark btn-lg shadow-sm">
-                <img class="mx-2" src="img/agregarUsuario.png" alt="listarLibro" width="30" height="30">Agregar, Editar o Eliminar Usuario
+                <img class="mx-2" src="img/agregarUsuario.png" alt="listarLibro" width="30" height="30">Listar, Agregar, Editar o Eliminar Usuario
             </a>
 
             <!-- Agregar, Editar o Eliminar libros disponibles pasando el rol, idProf y nombre-->
