@@ -8,14 +8,13 @@
 // Definimos e inicializamos el array de errores
 // Definimos e inicializamos el array de errores y las variables asociadas a cada campo
 $errores = [];
-$ape1 = "";
-$ape2 = "";
-$nombre = "";
-$email = "";
-$usuario = "";
-$password = "";
-$foto = "";
-$rol = 0; //El estado inicial de un libro es libre
+$nuevoape1 = "";
+$nuevoape2 = "";
+$nuevonombre = "";
+$nuevomail = "";
+$nuevousuario = "";
+$nuevapass = "";
+$nuevaimagen = "";
 $msgresultado = "";
 
 // Función que muestra el mensaje de error bajo el campo que no ha superado
@@ -33,33 +32,31 @@ function mostrar_error($errores, $campo)
 function validez($errores)
 {
     //En caso de no haber errores
-    if (isset($_POST["anadirUsuario"]) && (count($errores) == 0)) {
-        return '<div class="alert alert-success" style="margin-top:5px;"> Procedemos a insertar el Usuario en la Base de Datos</div>';
+    if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
+        return '<div class="alert alert-success" style="margin-top:5px;"> Procedemos a actualizar el Usuario en la Base de Datos</div>';
     }
 }
 
 // Visualización de las variables obtenidas mediante el formulario en modal
 function valoresfrm()
 {
-    global $ape1, $ape2, $nombre, $email, $usuario, $password, $foto, $rol;
+    global $nuevoape1, $nuevoape2, $nuevonombre, $nuevomail, $nuevousuario, $nuevapass, $nuevaimagen;
 
-    echo "<h4>Datos del Usuario <b>" . $usuario . "</b> obtenidos mediante el formulario</h4><br/>";
-    echo "<strong>Primer Apellido: </strong>" . $ape1 . "<br/>";
-    echo "<strong>Segundo Apellido: </strong>" . $ape2  . "<br/>";
-    echo "<strong>Nombre: </strong>" . $nombre . "<br/>";
-    echo "<strong>Email: </strong>" . $email . "<br/>";
-    echo "<strong>Nombre Usuario: </strong>" . $usuario . "<br/>";
-    echo "<strong>Contraseña: </strong>" . md5($password) . "<br/>";
-    echo "<strong>Rol: </strong>" . $rol . "<br/>";
+    echo "<h4>Datos del Usuario <b>" . $nuevousuario . "</b> obtenidos mediante el formulario para actualizar</h4><br/>";
+    echo "<strong>Primer Apellido: </strong>" . $nuevoape1 . "<br/>";
+    echo "<strong>Segundo Apellido: </strong>" . $nuevoape2  . "<br/>";
+    echo "<strong>Nombre: </strong>" . $nuevonombre . "<br/>";
+    echo "<strong>Email: </strong>" . $nuevomail . "<br/>";
+    echo "<strong>Nombre Usuario: </strong>" . $nuevousuario . "<br/>";
+    echo "<strong>Contraseña: </strong>" . md5($nuevapass) . "<br/>";
     echo "<strong>Foto(ruta): </strong>" . $_FILES["foto"]["tmp_name"] . "<br/>";
-    echo "<strong>Foto: </strong>" . $foto . "<br/>";
+    echo "<strong>Foto: </strong>" . $nuevaimagen . "<br/>";
 }
 
 // Comprobamos los campos
-if (isset($_POST["anadirUsuario"])) { //Si se pulsa en Añadir Libro
-    //Validamos los campos introducidos
-    echo "Validamos";
+if (isset($_POST["actualizar"])) { //Si se pulsa en Añadir Libro
 
+    //Validamos los campos introducidos
     //Apellidos
     if (
         !empty($_POST['ape1']) && //Si el campo nombre no está vacío  
@@ -90,7 +87,7 @@ if (isset($_POST["anadirUsuario"])) { //Si se pulsa en Añadir Libro
         $nombre = htmlspecialchars(trim($_POST['nombre'])); //Guardamos en una variable
         //echo  "Nombre: <b>" . $nombre . "</b><br/>";
     } else {
-        echo $_POST['nombre'] . "<br/>";
+        //echo $_POST['nombre'] . "<br/>";
         $errores['nombre'] = "No puede estar vacío ni contener mas de 20 caracteres, tampoco debe contener números<br/>";
     }
 
@@ -115,7 +112,6 @@ if (isset($_POST["anadirUsuario"])) { //Si se pulsa en Añadir Libro
     }
 
     //Usuario
-
     if (
         !empty($_POST['usuario']) && // Si el campo usuario no está vacío
         (preg_match("/^[a-zA-Z0-9_]{1,20}$/", $_POST['usuario'])) // Expresión regular para letras, números y guiones bajos
@@ -126,6 +122,8 @@ if (isset($_POST["anadirUsuario"])) { //Si se pulsa en Añadir Libro
         $errores['usuario'] = "El nombre de usuario no puede estar vacío, debe tener un máximo de 20 caracteres y solo puede contener letras, números y guiones bajos.<br/>";
     }
 
+    // Rol
+    $rol = $_POST['rol'];
 
     //Campo Foto
     if (isset($_FILES['foto']) && !empty($_FILES['foto']['tmp_name'])) {
@@ -134,7 +132,7 @@ if (isset($_POST["anadirUsuario"])) { //Si se pulsa en Añadir Libro
         $imagen = $_FILES['foto'];
         $extensionesPermitidas = ['image/jpeg', 'image/png', 'image/gif'];
         if (!in_array($imagen['type'], $extensionesPermitidas)) {
-            echo "La foto debe ser un archivo válido (JPG, PNG o GIF).";
+            $errores['foto'] = "La foto debe ser un archivo válido (JPG, PNG o GIF).";
         } else {
             //echo  "Fotografía:" . "La imagen nos ha llegado ;)";
         }

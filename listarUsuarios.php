@@ -31,6 +31,7 @@ try {
 ?>
 
 <!--Código HTML-->
+
 <body>
     <!--Mostramos posibles errores y mensajes-->
     <?php echo $msgresultado ?>
@@ -88,7 +89,8 @@ try {
                             } else {
                                 echo "Admin";
                             } ?></td>
-                        <td> <a href=""><img width="40" height="40" src="img/editarUsuario.png" alt="editar usuario"></a></td>
+                            <!--Damos el rol por si es admin y el idprof del usuario-->
+                        <td> <a href="actUsuario.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $fila['IdProf'] ?>&nombre=<?php echo $nombre; ?>"><img width="40" height="40" src="img/editarUsuario.png" alt="editar usuario"></a></td>
                         <td> <a href=""><img width="40" height="40" src="img/eliminarUsuario.png" alt="eliminar usuario"></a></td>
                     <?php } ?>
                     </tr>
