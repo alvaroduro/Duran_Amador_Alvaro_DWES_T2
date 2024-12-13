@@ -10,7 +10,11 @@ $delid = "";
 $fechaFormateada = "";
 if (isset($_GET['rol'])) {
     $rolUsuario = $_GET['rol']; // Obtenemos el Rol del usuario
-    $nombre = $_GET['nombre']; //obtenemos el nombre
+    if($rolUsuario == 1) {
+        $nombre = "Ana Maria";
+    }else {
+        $nombre = $_GET['nombre']; //obtenemos el nombre si es usuario
+    }
     $idProf = $_GET['idProf']; //Obtenemos el idProf
     echo "Rol= " . $rolUsuario . ", nombre= " . $nombre . ",idprof= " . $idProf;
 } else {
@@ -102,7 +106,7 @@ try {
                                 echo "Admin";
                             } ?></td>
                         <!--Damos el rol por si es admin y el idprof del usuario-->
-                        <td> <a href="actUsuario.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $delid ?>&nombre=<?php echo $delnombre; ?>"><img width="40" height="40" src="img/editarUsuario.png" alt="editar usuario"></a>Editar</td>
+                        <td> <a href="actUsuario.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $delid ?>&nombre=<?php echo $nombre; ?>"><img width="40" height="40" src="img/editarUsuario.png" alt="editar usuario"></a>Editar</td>
                         <td>
                             <!--Solo eliminamos los usuarios que no son admin, mostramos el botón eliminar-->
                             <?php if($fila['Rol'] == 0) {?>

@@ -138,7 +138,7 @@ try {
                                 } ?></td>
                                 
                             <!--Boton editar-->    
-                            <td> Editar<a class="navbar-brand" href=""><img width="40" height="40" src="img/editarLibro.png" alt="editarLibro"></a></td>
+                            <td> Editar<a class="navbar-brand" href="actLibro.php?rol=<?php echo $rolUsuario; ?>&idEje=<?php echo $delidejemplar ?>&nombre=<?php echo $nombre; ?>&idProf=<?php echo $idProf; ?>&isbn=<?php echo $delisbn; ?>&titulo=<?php echo $deltitulo; ?>"><img width="40" height="40" src="img/editarLibro.png" alt="editarLibro"></a></td>
 
                             <!--Boton eliminar-->
                             <td> <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar"

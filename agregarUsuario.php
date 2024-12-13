@@ -5,7 +5,11 @@
 <?php require 'verificarCampo.php'; ?>
 <?php if (isset($_GET['rol'])) {
     $rolUsuario = $_GET['rol']; // Obtenemos el Rol del usuario
-    $nombre = $_GET['nombre']; //obtenemos el nombre
+    if($rolUsuario == 1) {
+        $nombre = "Ana Maria";
+    }else {
+        $nombre = $_GET['nombre']; //obtenemos el nombre si es usuario
+    }
     $idProf = $_GET['idProf']; //Obtenemos el idProf
     echo "Rol= " . $rolUsuario . ", nombre= " . $nombre . ", idprof= " . $idProf;
 } else {

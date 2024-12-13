@@ -6,13 +6,17 @@
 <?php require 'verificarAtualizarCampo.php'; ?>
 <?php if (isset($_GET['rol'])) {
     $rolUsuario = $_GET['rol']; // Obtenemos el Rol del usuario
-    $nombre = $_GET['nombre']; //obtenemos el nombre
+    if($rolUsuario == 1) {
+        $nombre = "Ana Maria";
+    }else {
+        $nombre = $_GET['nombre']; //obtenemos el nombre si es usuario
+    }
     $idProf = $_GET['idProf']; //Obtenemos el idProf
     echo "Rol= " . $rolUsuario . ", nombre= " . $nombre . ", idprof (para actualizar)= " . $idProf;
 } else {
     echo "No se recibió ningún rol.";
 }
-$$msgresultado = "";
+$msgresultado = "";
 $msgresultadoUsuario = "";
 $msgresultadoMail = "";
 
@@ -101,12 +105,12 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
         //Asignamos la nueva imagen
         $nuevaimagen = $imagen;
         // Mostramos una ventana modal con los datos del libro introducido al clicar un botón
-        require 'modal/modalActualizarUsuario.php';
+        require 'modal/modalActualizarLibro.php';
 
 
         //Si no hay errores insertamos el libro en la Base de Datos
         try { // Definimos la consulta
-            $sql = "UPDATE profesores SET Apellido1=:Apellido1, Apellido2=:Apellido2, Nombre=:Nombre, Password=:Password, Email=:Email, Usuario=:Usuario, Foto=:Foto WHERE IdProf=:IdProf";
+            $sql = "UPDATE profesores SET Apellido1=:Apellido1, Apellido2=:Apellido2, Nombre=:Nombre, Password=:Password, Email=:Email, Usuario=:Usuario, Foto=:Foto, Rol=:Rol WHERE IdProf=:IdProf";
 
             //Preparamos
             $query = $conexion->prepare($sql);
@@ -121,6 +125,7 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
                 'Email' => $nuevomail,
                 'Usuario' => $nuevousuario,
                 'Foto' => $nuevaimagen,
+                'Rol' => $nuevorol
             ]);
 
             // Supervisamos si se ha realizado correctamente
@@ -281,10 +286,17 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
 
         <!--Rol-->
         <div class="form-group mb-3">
+            <!-- Campo para mostrar el estado actual -->
+            <label for="rolAactual" class="form-label">Rol Actual</label>
+            <input type="text" id="estadoActual" class="form-control" value="<?php
+             echo $valrol; ?>" readonly>
             <label for="rol" class="form-label">ROL</label>
             <!--Mostramos el registro con el id anteriormente-->
-            <input type="text" name="rol" id="rol" class="form-control" value="<?php
-                                                                                echo ($valrol == 0 || $valrol === 'Usuario') ? 'Usuario' : 'Administrador';  ?>" readonly>
+            <select id="rol" name="rol" class="form-control">
+                <option value="" disabled selected>Elige un rol...</option>
+                <option value="0">Usuario</option>
+                <option value="1">Administrador</option>
+            </select>
         </div>
 
         <!--Btn Añadir Libro-->
