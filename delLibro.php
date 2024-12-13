@@ -1,21 +1,22 @@
-<!--Eliminar Usuario-->
+<!--Eliminar Libro-->
 <?php
 $msgresultadoEliminar = "";
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idProfEliminar'])) {
-    $idProfEliminar = $_POST['idProfEliminar'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idEjeEliminar'])) {
+    $idEjeEliminar = $_POST['idEjeEliminar'];
 
     try {
+        var_dump($idEjeEliminar);
         // Consulta para eliminar al usuario
-        $sql = "DELETE FROM profesores WHERE IdProf = :idProf";
+        $sql = "DELETE FROM libros WHERE IdEjemplar = :idEje";
         $resultado = $conexion->prepare($sql);
-        $resultado->execute(['idProf' => $idProfEliminar]);
+        $resultado->execute(['idEje' => $idEjeEliminar]);
 
         // Confirmación de eliminación
         if ($resultado) {
-            $msgresultadoEliminar = '<div class="alert alert-success">Usuario eliminado correctamente.</div>';
+            $msgresultadoEliminar = '<div class="alert alert-success">Libro eliminado correctamente.</div>';
         }
     } catch (PDOException $ex) {
-        $msgresultadoEliminar = '<div class="alert alert-danger">Error al eliminar el usuario: ' . $ex->getMessage() . '</div>';
+        $msgresultadoEliminar = '<div class="alert alert-danger">Error al eliminar el Libro: ' . $ex->getMessage() . '</div>';
     }
 }
 ?>
@@ -30,15 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idProfEliminar'])) {
             </div>
             <form method="POST">
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar al siguiente usuario?</p>
+                    <p>¿Estás seguro de que deseas eliminar al siguiente Libro?</p>
                     <ul>
                         <!--Mostramos los datos en la ventana modal-->
                         <li><strong>ID:</strong> <span id="modal-id"></span></li>
-                        <li><strong>Nombre:</strong> <span id="modal-nombre"></span></li>
-                        <li><strong>Email:</strong> <span id="modal-email"></span></li>
-                        <li><strong>Nombre Usuario:</strong> <span id="modal-usuario"></span></li>
+                        <li><strong>Título:</strong> <span id="modal-titulo"></span></li>
+                        <li><strong>Editorial:</strong> <span id="modal-editorial"></span></li>
+                        <li><strong>ISBN:</strong> <span id="modal-isbn"></span></li>
                     </ul>
-                    <input type="hidden" name="idProfEliminar" id="modal-idProfEliminar">
+                    <input type="hidden" name="idEjeEliminar" id="modal-idEjeEliminar">
                 </div>
                 <div class="modal-footer">
                     <!--Añadimos los botones para aceptar o no la eliminacion-->
@@ -60,15 +61,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idProfEliminar'])) {
         // Guardamos los datos del boton en las variables
         var button = event.relatedTarget;
         var id = button.getAttribute('data-id');
-        var nombre = button.getAttribute('data-nombre');
-        var email = button.getAttribute('data-email');
-        var usuario = button.getAttribute('data-usuario');
+        var titulo = button.getAttribute('data-titulo');
+        var editorial = button.getAttribute('data-editorial');
+        var isbn = button.getAttribute('data-isbn');
 
         // Escribimos los datos en el modal
         document.getElementById('modal-id').textContent = id;
-        document.getElementById('modal-nombre').textContent = nombre;
-        document.getElementById('modal-email').textContent = email;
-        document.getElementById('modal-usuario').textContent = usuario;
-        document.getElementById('modal-idProfEliminar').value = id;
+        document.getElementById('modal-titulo').textContent = titulo;
+        document.getElementById('modal-editorial').textContent = editorial;
+        document.getElementById('modal-isbn').textContent = isbn;
+        document.getElementById('modal-idEjeEliminar').value = id;
     });
 </script>

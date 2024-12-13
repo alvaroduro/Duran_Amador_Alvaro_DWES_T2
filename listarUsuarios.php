@@ -106,12 +106,13 @@ try {
                         <td>
                             <!--Solo eliminamos los usuarios que no son admin, mostramos el botón eliminar-->
                             <?php if($fila['Rol'] == 0) {?>
+                                <!--Boton eliminar-->
                                 <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar"
                                 data-id="<?php echo htmlspecialchars($delid) ?>"
                                 data-nombre="<?php echo htmlspecialchars($delnombre); ?>"
                                 data-email="<?php echo htmlspecialchars($delemail); ?>"
                                 data-usuario="<?php echo htmlspecialchars($delusuario); ?>">
-                                <img src="img/1734029819-eliminarUsuario.png" alt="eliminar usuario" width="40" height="40">
+                                <img src="img/1734029819-eliminarUsuario.png" alt="eliminar libro" width="40" height="40">
                                 Eliminar
                             </button>
                             <?php } ?>

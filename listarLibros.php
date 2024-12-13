@@ -1,7 +1,12 @@
 <!-- Listar Libros para profesor o usuario-->
 <?php require 'includes/header.php'; ?>
 <?php require_once 'config.php'; ?>
+<?php require 'delLibro.php'; ?>
 <?php
+$deltitulo = "";
+$deleditorial = "";
+$delisbn = "";
+$delidejemplar = "";
 $fechaFormateada = "";
 if (isset($_GET['rol'])) {
     $rolUsuario = $_GET['rol']; // Obtenemos el Rol del usuario
@@ -34,6 +39,7 @@ try {
 
 <body>
     <?php echo $msgresultado ?>
+    <?php echo $msgresultadoEliminar ?>
 
     <div class="container mt-5 justify-content-center">
         <div class="d-flex flex-row mb-3 justify-content-evenly">
@@ -108,13 +114,17 @@ try {
                             //Si el rol es ADMIN mostramos todos-------------------------------->
                         } elseif ($rolUsuario == 1) { ?>
                             <!--<td><?= $fila['IdEjemplar'] ?></td>-->
+                            <?php $delidejemplar = $fila['IdEjemplar'] ?>
                             <td><?= $fila['ISBN'] ?></td>
+                            <?php $delisbn = $fila['ISBN'] ?>                           
                             <td><?= $fila['Titulo'] ?></td>
+                            <?php $deltitulo = $fila['Titulo'] ?>
                             <td><?=
                                 $fechaFormateada = date('m/Y', strtotime($fila['Fecha_Publicacion'])); //Convertimos la fecha al formato
                                 //echo $fechaFormateada 
                                 ?></td>
                             <td><?= $fila['Editorial'] ?></td>
+                            <?php $deleditorial = $fila['Editorial'] ?>
                             <td><?= $fila['Descripcion'] ?></td>
                             <td><?= $fila['Precio'] . "€" ?> </td>
                             <td><?php if ($fila['Portada'] != null) {
@@ -126,8 +136,19 @@ try {
                                 } else {
                                     echo "Prestado";
                                 } ?></td>
-                            <td> <a href=""><img width="40" height="40" src="img/editarLibro.png" alt="editarLibro"></a></td>
-                            <td> <a href=""><img width="40" height="40" src="img/eliminarLibro.png" alt="eliminarLibro"></a></td>
+                                
+                            <!--Boton editar-->    
+                            <td> Editar<a class="navbar-brand" href=""><img width="40" height="40" src="img/editarLibro.png" alt="editarLibro"></a></td>
+
+                            <!--Boton eliminar-->
+                            <td> <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar"
+                                data-id="<?php echo htmlspecialchars($delidejemplar) ?>"
+                                data-titulo="<?php echo htmlspecialchars($deltitulo); ?>"
+                                data-editorial="<?php echo htmlspecialchars($deleditorial); ?>"
+                                data-isbn="<?php echo htmlspecialchars($delisbn); ?>">
+                                <img src="img/eliminarLibro.png" alt="eliminar usuario" width="40" height="40">
+                                Eliminar
+                            </button></td>
                         <?php } ?>
                     </tr>
                 <?php } ?>
