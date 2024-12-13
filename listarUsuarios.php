@@ -1,7 +1,12 @@
 <!-- Listar Usuarios-->
 <?php require 'includes/header.php'; ?>
 <?php require_once 'config.php'; ?>
+<?php require 'delUsuario.php'; ?>
 <?php
+$delnombre = "";
+$delusuario = "";
+$delemail = "";
+$delid = "";
 $fechaFormateada = "";
 if (isset($_GET['rol'])) {
     $rolUsuario = $_GET['rol']; // Obtenemos el Rol del usuario
@@ -35,17 +40,20 @@ try {
 <body>
     <!--Mostramos posibles errores y mensajes-->
     <?php echo $msgresultado ?>
+    <?php echo $msgresultadoEliminar ?>
 
+    <!--Principal-->
     <div class="container mt-5 justify-content-center">
+        <!--Lista-->
         <div class="d-flex flex-row mb-3 justify-content-evenly">
 
             <!--Botón Atras-->
             <a class="navbar-brand mx-2" href="admin.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>"><img class="mx-1" src="img/flechaAtras.png" alt="atras" width="40" height="40"></a>
 
             <!--Título-->
-            <h1 class="text-center">Listado de Libros</h1>
+            <h1 class="text-center">Listado de Usuarios</h1>
 
-            <!--Agregar Usuario-->
+            <!--Agregar Usuario Nuevo-->
             <a class="navbar-brand mx-2" href="agregarUsuario.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>">Agregar Usuario Nuevo<img class="mx-2" width="40" height="40" src="img/agregarUsuario.png" alt="agregar user"></a>
 
             <!--Salir login-->
@@ -74,12 +82,16 @@ try {
                 <?php while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) { ?>
                     <tr>
                         <!--<td><?= $fila['IdProf'] ?></td>-->
+                        <?php $delid = $fila['IdProf'] ?>
                         <td><?= $fila['Apellido1'] ?></td>
                         <td><?= $fila['Apellido2'] ?></td>
                         <td><?= $fila['Nombre'] ?></td>
+                        <?php $delnombre = $fila['Nombre'] ?>
                         <td><?= md5($fila['Password']) ?></td>
                         <td><?= $fila['Email'] ?> </td>
+                        <?php $delemail = $fila['Email'] ?>
                         <td><?= $fila['Usuario'] ?> </td>
+                        <?php $delusuario = $fila['Usuario'] ?>
                         <td><?php if ($fila['Foto'] != null) {
                                 echo '<img src="img/' . $fila['Foto'] . '" alt="Foto cargada" width="70" height="80">';
                             } ?> </td>
@@ -89,9 +101,21 @@ try {
                             } else {
                                 echo "Admin";
                             } ?></td>
-                            <!--Damos el rol por si es admin y el idprof del usuario-->
-                        <td> <a href="actUsuario.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $fila['IdProf'] ?>&nombre=<?php echo $nombre; ?>"><img width="40" height="40" src="img/editarUsuario.png" alt="editar usuario"></a></td>
-                        <td> <a href=""><img width="40" height="40" src="img/eliminarUsuario.png" alt="eliminar usuario"></a></td>
+                        <!--Damos el rol por si es admin y el idprof del usuario-->
+                        <td> <a href="actUsuario.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $delid ?>&nombre=<?php echo $delnombre; ?>"><img width="40" height="40" src="img/editarUsuario.png" alt="editar usuario"></a>Editar</td>
+                        <td>
+                            <!--Solo eliminamos los usuarios que no son admin, mostramos el botón eliminar-->
+                            <?php if($fila['Rol'] == 0) {?>
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar"
+                                data-id="<?php echo htmlspecialchars($delid) ?>"
+                                data-nombre="<?php echo htmlspecialchars($delnombre); ?>"
+                                data-email="<?php echo htmlspecialchars($delemail); ?>"
+                                data-usuario="<?php echo htmlspecialchars($delusuario); ?>">
+                                <img src="img/1734029819-eliminarUsuario.png" alt="eliminar usuario" width="40" height="40">
+                                Eliminar
+                            </button>
+                            <?php } ?>
+                        </td>
                     <?php } ?>
                     </tr>
             </tbody>

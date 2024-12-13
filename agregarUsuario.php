@@ -19,7 +19,7 @@ $msgresultadoMail = "";
 <div class="d-flex flex-row mb-3 justify-content-evenly">
 
     <!--Botón Atras-->
-    <a href="admin.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>"><img src="img/flechaAtras.png" alt="atras" width="40" height="40"></a>
+    <a href="listarUsuarios.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>"><img src="img/flechaAtras.png" alt="atras" width="40" height="40"></a>
 
     <!--Botón Título-->
     <h1>Agregar Usuario Nuevo</h1>
