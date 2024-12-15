@@ -46,7 +46,6 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
             "El título del Libro ya existe!! :)" . '</div>';
     }
 
-    var_dump("verificamos campo titulo: " .verificarCampoLibro($conexion, 'Titulo', 'libros', $titulo, $idEjemplar));
     // Si el email y el nombre usuario no existen
     if (
         !verificarCampoLibro($conexion, 'ISBN', 'libros', $isbn, $idEjemplar)

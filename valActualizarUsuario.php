@@ -122,9 +122,6 @@ if (isset($_POST["actualizar"])) { //Si se pulsa en Añadir Libro
         $errores['usuario'] = "El nombre de usuario no puede estar vacío, debe tener un máximo de 20 caracteres y solo puede contener letras, números y guiones bajos.<br/>";
     }
 
-    // Rol
-    $rol = $_POST['rol'];
-
     //Campo Foto
     if (isset($_FILES['foto']) && !empty($_FILES['foto']['tmp_name'])) {
 

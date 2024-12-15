@@ -29,11 +29,9 @@ function verificarCampoLibro($conexion, $campo, $tabla, $dato, $idEjemplar) {
         $sql = "SELECT COUNT(*) AS total FROM $tabla WHERE $campo = :dato AND idEjemplar != :idEjemplar";
         $stmt = $conexion->prepare($sql);
         $stmt->execute(['dato' => $dato, 'idEjemplar' => $idEjemplar]);
-        var_dump("ejecuto: ".$idEjemplar);
 
         // Obtenemos el resultado de la consulta
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-        echo "Resultado en libro";
 
         // Si el resultado es mayor que 0, el campo existe
         return $resultado['total'] > 0;

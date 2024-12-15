@@ -57,8 +57,8 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
         $nuevapass =  md5($_POST['password']);
         $nuevomail = $_POST['email'];
         $nuevousuario = $_POST['usuario'];
-        $nuevorol = $_POST['rol'];
-
+        if($rolUsuario == 1) { $nuevorol = $_POST['rol']; }
+        
         //Insertamos imagen
         $nuevaimagen = "";
 
@@ -107,7 +107,8 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
         // Mostramos una ventana modal con los datos del libro introducido al clicar un botón
         require 'modal/modalActualizarLibro.php';
 
-
+        //Si es ADMIN
+        if($rolUsuario == 1) {
         //Si no hay errores insertamos el libro en la Base de Datos
         try { // Definimos la consulta
             $sql = "UPDATE profesores SET Apellido1=:Apellido1, Apellido2=:Apellido2, Nombre=:Nombre, Password=:Password, Email=:Email, Usuario=:Usuario, Foto=:Foto, Rol=:Rol WHERE IdProf=:IdProf";
@@ -141,6 +142,41 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
             $msgresultado = '<div class="alert alert-danger">' .
                 "El Usuario no pudo registrarse en la Base de Datos!! :( (" . $ex->getMessage() . ')</div>'; //die(); 
         }
+        //Si es USUARIO
+    }else {
+        //Si no hay errores insertamos el libro en la Base de Datos
+        try { // Definimos la consulta
+            $sql = "UPDATE profesores SET Apellido1=:Apellido1, Apellido2=:Apellido2, Nombre=:Nombre, Password=:Password, Email=:Email, Usuario=:Usuario, Foto=:Foto WHERE IdProf=:IdProf";
+
+            //Preparamos
+            $query = $conexion->prepare($sql);
+
+            //Ejecutamos con los valores obtenidos
+            $query->execute([
+                'IdProf' => $idProf,
+                'Apellido1' => $nuevoape1,
+                'Apellido2' => $nuevoape2,
+                'Nombre' => $nuevonombre,
+                'Password' => $nuevapass,
+                'Email' => $nuevomail,
+                'Usuario' => $nuevousuario,
+                'Foto' => $nuevaimagen,
+            ]);
+
+            // Supervisamos si se ha realizado correctamente
+            if ($query) {
+                $msgresultado = '<div class="alert alert-success">' .
+                    "El Usuario se actualizó correctamente en la Base de Datos!! :)" . '</div>';
+            } else {
+                $msgresultado = '<div class="alert alert-danger">' .
+                    "Datos de la actualización del Usuario erróneos!! :( (" . $ex->getMessage() . ')</div>';
+                //die();   
+            }
+        } catch (PDOException $ex) {
+            $msgresultado = '<div class="alert alert-danger">' .
+                "El Usuario no pudo registrarse en la Base de Datos!! :( (" . $ex->getMessage() . ')</div>'; //die(); 
+        }
+    }
     }
 
     //Damos valores a los campos
@@ -151,7 +187,8 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
     $valemail = $nuevomail;
     $valusuario = $nuevousuario;
     $valimagen = $nuevaimagen;
-    $valrol = $nuevorol;
+    if($rolUsuario == 1) { $valrol = $nuevorol; }
+    
 } else {
     //----------------Si no se pulsa en actualizar nos traemos los datos--------------------------------
     if (isset($_GET['idProf']) && (is_numeric($_GET['idProf']))) { //Si tenemos el id y es número
@@ -199,7 +236,14 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
 <div class="d-flex flex-row mb-3 justify-content-evenly">
 
     <!--Botón Atras-->
-    <a href="listarUsuarios.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>"><img src="img/flechaAtras.png" alt="atras" width="40" height="40"></a>
+    <!--ADMIN-->
+    <?php if($rolUsuario == 1) { ?>
+        <a href="listarUsuarios.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>"><img src="img/flechaAtras.png" alt="atras" width="40" height="40"></a>
+       <?php }else { ?>
+        <a href="profesor.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>"><img src="img/flechaAtras.png" alt="atras" width="40" height="40"></a>
+       <?php } ?>
+    <!--ADMIN-->
+    
 
     <!--Botón Título-->
     <h1>Actualizar Usuario</h1>
@@ -284,10 +328,12 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
             <?php echo  mostrar_error($errores, "foto"); ?>
         </div>
 
-        <!--Rol-->
+        <!--Solo si es ADMIN Puede modificar el Rol-->
+        <?php if($rolUsuario == 1) {?>
+            <!--Rol-->
         <div class="form-group mb-3">
             <!-- Campo para mostrar el estado actual -->
-            <label for="rolAactual" class="form-label">Rol Actual</label>
+            <label for="rolActual" class="form-label">Rol Actual</label>
             <input type="text" id="estadoActual" class="form-control" value="<?php
              echo $valrol; ?>" readonly>
             <label for="rol" class="form-label">ROL</label>
@@ -298,6 +344,8 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
                 <option value="1">Administrador</option>
             </select>
         </div>
+        <?php } ?>
+        
 
         <!--Btn Añadir Libro-->
         <button onclick="return confirmacion()" type="submit" name="actualizar" class="btn btn-primary">Actualizar Usuario</button>

@@ -43,18 +43,14 @@ if (isset($_GET['rol']) && isset($_GET['nombre'])) {
                 <img class="mx-2" src="img/registroLibro.png" alt="registroLibro" width="30" height="30">Registrar Préstamo
             </a>
 
-            <!-- Devolver Libro -->
-            <a href="devolverLibro.html" class="btn btn-warning btn-lg shadow-sm">
-                <img class="mx-2" src="img/devolverLibro.png" alt="devolverLibro" width="30" height="30">Devolver Libro
-            </a>
-
             <!-- Estado préstamos -->
-            <a href="devolverLibro.html" class="btn btn-light btn-lg shadow-sm">
+            <!-- Estado préstamos -->
+            <a href="listarPrestamos.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>" class="btn btn-light btn-lg shadow-sm">
                 <img class="mx-2" src="img/prestamosLibro.png" alt="estadoPrestamos" width="30" height="30">Estado Préstamos
             </a>
 
-            <!-- Historial Libros -->
-            <a href="devolverLibro.html" class="btn btn-secondary btn-lg shadow-sm">
+            <!-- Historial Prestamos -->
+            <a class="btn btn-secondary btn-lg shadow-sm" href="listarPrestamos.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>" class="btn btn-light btn-lg shadow-sm">
                 <img class="mx-2" src="img/historialLibros.png" alt="historialLibros" width="30" height="30">Ver Historial Préstamos
             </a>
         </div>

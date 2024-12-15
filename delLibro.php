@@ -5,7 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idEjeEliminar'])) {
     $idEjeEliminar = $_POST['idEjeEliminar'];
 
     try {
-        var_dump($idEjeEliminar);
         // Consulta para eliminar al usuario
         $sql = "DELETE FROM libros WHERE IdEjemplar = :idEje";
         $resultado = $conexion->prepare($sql);
