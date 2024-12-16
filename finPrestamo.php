@@ -23,6 +23,8 @@ if (isset($_POST['finalizarPrestamo'])) {
 
         //Si hay datos en la consulta y se ha metido la fecha de fin de prestamo
         if ($resultadoPres) {
+            // Registramos en la tabla logs eliminar libro del admin
+            registrarActividad($conexion, "baja", "Ejemplar " . $idEjemplar . " dado de baja de préstamos");
             // Mostramos mensaje de confirmacion prestamo
             $msgresultadoPres = '<div class="alert alert-success mx-2">' . "La consulta se realizó correctamente(actualizar fecha de fin prestamo)!!" . '<img width="50" height="50" src="https://img.icons8.com/clouds/100/ok-hand.png" alt="ok-hand"/></div>';
 
@@ -38,9 +40,10 @@ if (isset($_POST['finalizarPrestamo'])) {
 
             // si la consulta para actualizar estado en libros
             if ($resultadoLibro) {
+                // Registramos en la tabla logs eliminar libro del admin
+                registrarActividad($conexion, "actualizacion", "Ejemplar " . $idEjemplar . " queda libre de prestamo");
                 // Mostramos mensaje de confirmacion libro
                 $msgresultadoLibro = '<div class="alert alert-success mx-2">' . "La consulta se realizó correctamente(actualizar estado en libros)!!" . '<img width="50" height="50" src="https://img.icons8.com/clouds/100/ok-hand.png" alt="ok-hand"/></div>';
-
             } else {
                 // Mensaje no se ha podido actualizar libro
                 $msgresultadoLibro = '<div class="alert alert-danger">' .

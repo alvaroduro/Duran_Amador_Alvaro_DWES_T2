@@ -62,6 +62,8 @@ GROUP BY
 
     //Si hay datos en la consulta
     if ($resultado) {
+        // Registramos en la tabla logs visualizacion libros 
+        registrarActividad($conexion, "visualizacion", "usuario " . $nombre . " visualizacion todos usuarios");
         $msgresultado = '<div class="alert alert-success mx-2">' . "La consulta se realizó correctamente!!" . '<img width="50" height="50" src="https://img.icons8.com/clouds/100/ok-hand.png" alt="ok-hand"/></div>';
     } //o no
 } catch (PDOException $ex) {

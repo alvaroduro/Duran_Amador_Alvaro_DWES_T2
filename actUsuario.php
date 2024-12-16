@@ -131,6 +131,8 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
 
             // Supervisamos si se ha realizado correctamente
             if ($query) {
+                // Registramos en la tabla logs la actualizacion del admin
+                registrarActividad($conexion,"actualizacion", "usuario ".$nuevonombre." actualizado por ".$nombre);
                 $msgresultado = '<div class="alert alert-success">' .
                     "El Usuario se actualizó correctamente en la Base de Datos!! :)" . '</div>';
             } else {
@@ -165,6 +167,8 @@ if (isset($_POST["actualizar"]) && (count($errores) == 0)) {
 
             // Supervisamos si se ha realizado correctamente
             if ($query) {
+                // Registramos en la tabla logs el registro del admin
+                registrarActividad($conexion,"actualizacion", "usuario ".$nuevousuario." actualizado por ".$nuevonombre);
                 $msgresultado = '<div class="alert alert-success">' .
                     "El Usuario se actualizó correctamente en la Base de Datos!! :)" . '</div>';
             } else {

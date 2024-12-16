@@ -1,6 +1,6 @@
-<!--Archivo para comprobar si el usuario existe y las creedenciales son válidad-->
+<!--Archivo para comprobar si el usuario existe y las creedenciales son válidas-->
+<?php require_once 'config.php'; ?>
 <?php
-
 //Variables
 $msgresultadoCampo = ""; // Mensaje para fallo en campos
 $modal = "";
@@ -38,15 +38,20 @@ if (isset($_POST['btningresar'])) {
 
                 <!--Mostramos alerta de creedenciales correctas-->
                 <script>
-                    swal("Creedenciales Incorrectas!", "Bienvenido!!", "success");
+                    swal("Creedenciales Correctas!", "Bienvenido!!", "success");
                 </script>
                 <?php
 
                 // Redirigimos si es usuario o administrador
                 if ($rolUsuario == 0) {
+                    // Registramos en la tabla logs el registro del usuario
+                    registrarActividad($conexion,"alta", "login del usuario ".$nombre.", con el rol = $rolUsuario");
+
                     // Redirigimos a profesores con el rol del usuario
                     header('Location: profesor.php?rol=' . $rolUsuario . '&&nombre=' . $nombre. '&&idProf='.$idProf);
                 } else {
+                    // Registramos en la tabla logs el registro del admin
+                    registrarActividad($conexion,"alta", "login del admin ".$nombre.", con el rol = $rolUsuario");
                     // Redirigimos a listarLibros.php con el rol del usuario
                     header('Location: admin.php?rol=' . $rolUsuario . '&&nombre=' . $nombre. '&&idProf='.$idProf);
                 }

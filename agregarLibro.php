@@ -27,7 +27,7 @@
     <?php echo validez($errores);
 
     //Definimos la variable a null ya que todavia no se ha cargado imagen
-    $imagen = null; 
+    $imagen = null;
 
     //Si no hay errores imprimimos los valores almacenados
     if (isset($_POST["anadirLibro"]) && (count($errores) == 0)) {
@@ -113,6 +113,8 @@
 
                 // Supervisamos si se ha realizado correctamente
                 if ($query) {
+                    // Registramos en la tabla logs alta libro del admin
+                    registrarActividad($conexion, "alta", "libro " . $titulo . " dado de alta por " . $nombre);
                     $msgresultado = '<div class="alert alert-success">' .
                         "El Libro se registró correctamente en la Base de Datos!! :)" . '</div>';
                 } else {

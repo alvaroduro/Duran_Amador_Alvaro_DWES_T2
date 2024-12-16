@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idEjeEliminar'])) {
 
         // Confirmación de eliminación
         if ($resultado) {
+            // Registramos en la tabla logs eliminar libro del admin
+            registrarActividad($conexion, "baja", "usuario " . $usuario . " dado de baja");
             $msgresultadoEliminar = '<div class="alert alert-success">Libro eliminado correctamente.</div>';
         }
     } catch (PDOException $ex) {

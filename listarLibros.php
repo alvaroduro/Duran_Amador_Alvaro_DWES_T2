@@ -45,6 +45,8 @@ ON
 
     //Si hay datos en la consulta
     if ($resultado) {
+        // Registramos en la tabla logs visualizacion libros 
+        registrarActividad($conexion, "visualizacion", "usuario " . $nombre . " visualizacion libros");
         $msgresultado = '<div class="alert alert-success mx-2">' . "La consulta se realizó correctamente!!" . '<img width="50" height="50" src="https://img.icons8.com/clouds/100/ok-hand.png" alt="ok-hand"/></div>';
 
         // Cogemos el IdProf de la tabla prestamos y la Fecha_Fin

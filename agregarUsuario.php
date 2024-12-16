@@ -130,6 +130,8 @@ $msgresultadoMail = "";
 
                 // Supervisamos si se ha realizado correctamente
                 if ($query) {
+                    // Registramos en la tabla logs alta usuario del admin
+                    registrarActividad($conexion, "alta", "usuario " . $usuario . " dado de alta por " . $nombre);
                     $msgresultado = '<div class="alert alert-success">' .
                         "El Usuario se registró correctamente en la Base de Datos!! :)" . '</div>';
                 } else {

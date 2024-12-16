@@ -66,7 +66,7 @@ if (isset($_POST["registrarPrestamo"]) && (count($errores) == 0)) {
     $isbn = $_POST['isbn'];
 
     // Cogemos los campos que traemos por defecto y efectuamos la consulta
-    //Si no hay errores insertamos el libro en la Base de Datos
+    //Si no hay errores insertamos el prestamo en la Base de Datos
     try { // Definimos la consulta
         $sql = "INSERT INTO prestamos (IdEjemplar,ISBN,IdProf,Fecha_Inicio,Observaciones) VALUES (:IdEjemplar,:ISBN,:IdProf,:Fecha_Inicio,:Observaciones)";
 
@@ -84,6 +84,8 @@ if (isset($_POST["registrarPrestamo"]) && (count($errores) == 0)) {
 
         // Supervisamos si se ha realizado correctamente
         if ($query) {
+            // Registramos en la tabla logs visualizacion libros 
+            registrarActividad($conexion, "alta", "usuario " . $nombre . " prestamo libro " . $idejemplar.", con título ".$titulo);
             $msgresultadoPres = '<div class="alert alert-success">' .
                 "El Préstamo del libro se registró correctamente en la Base de Datos!! :)" . '</div>';
 
@@ -102,12 +104,11 @@ if (isset($_POST["registrarPrestamo"]) && (count($errores) == 0)) {
             if ($query) {
                 $msgresultado = '<div class="alert alert-success">' .
                     "El Estado del libro se registró correctamente en la Base de Datos!! :)" . '</div>';
-            }else {
+            } else {
                 $msgresultado = '<div class="alert alert-danger">' .
-                "Datos del estado del libro erróneos!! :( (" . $ex->getMessage() . ')</div>';
-            //die(); 
+                    "Datos del estado del libro erróneos!! :( (" . $ex->getMessage() . ')</div>';
+                //die(); 
             }
-
         } else {
             $msgresultado = '<div class="alert alert-danger">' .
                 "Datos de préstamo del libro erróneos!! :( (" . $ex->getMessage() . ')</div>';
@@ -142,7 +143,7 @@ if (isset($_POST["registrarPrestamo"]) && (count($errores) == 0)) {
             <a class="navbar-brand mx-2"
                 href="listarLibros.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>&idEje=<?php echo $idejemplar; ?>"><img
                     class="mx-1" src="img/flechaAtras.png" alt="atras" width="40" height="40"></a>
-                    
+
             <!--Título-->
             <h1 class="text-center">Solicitud Préstamo</h1>
 
