@@ -23,17 +23,17 @@ try {
     // Escribimos la consulta
     $sql = "SELECT 
                 libros.*,
-    prestamos.IdEjemplar, 
-    prestamos.IdProf, 
-    prestamos.Fecha_Fin, 
-    profesores.*
+                prestamos.IdEjemplar AS prestaamosIdEjemplar, 
+                prestamos.IdProf, 
+                prestamos.Fecha_Fin, 
+                profesores.*
 FROM 
     libros
-INNER JOIN 
+LEFT JOIN 
     prestamos 
 ON 
     libros.IdEjemplar = prestamos.IdEjemplar
-INNER JOIN 
+LEFT JOIN 
     profesores 
 ON 
     prestamos.IdProf = profesores.IdProf";
@@ -60,6 +60,7 @@ ON
 
 <body>
     <?php echo ($msgresultado) ?>
+    <?php echo ($msgresultadoEliminar) ?>
 
     <div class="container mt-5 justify-content-center">
         <div class="d-flex flex-row mb-3 justify-content-evenly">
@@ -103,8 +104,9 @@ ON
                     <th>Descripción</th>
                     <th>Precio</th>
                     <th>Portada</th>
+                    <th>Autor</th>
                     <th>Estado</th> <!--Estado-> 0=libre, 1=prestado-->
-                    <th class="text-center" colspan="3">Operaciones</th>
+                    <th class="text-center mx-auto" colspan="3">Operaciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -116,6 +118,8 @@ ON
 
                 <!--Recogemos resultados Recorremos Array-->
                 <?php while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) {
+                    //var_dump($fila['IdEjemplar']);
+                    //var_dump($fila);
                     $ideantiguo = $fila['IdEjemplar'];
                     $isbneantiguo = $fila['ISBN'];
                     //var_dump($fila)
@@ -125,7 +129,7 @@ ON
                         <?php if ($rolUsuario == 0) { ?>
                             <!--Mostramos los libres o prestados-->
                             <?php if ($fila['Fecha_Fin'] == null || $fila['Estado'] == 0 && ($ideantiguo != $idenuevo) && ($isbneantiguo != $isbnenuevo)) { ?>
-                                <!--<td><?= $fila['IdEjemplar'] ?></td>-->
+                                
                                 <?php $delidejemplar = $fila['IdEjemplar'] ?>
                                 <td><?= $fila['ISBN'] ?></td>
                                 <?php $delisbn = $fila['ISBN'] ?>
@@ -140,6 +144,7 @@ ON
                                 <td><?php if ($fila['Portada'] != null) {
                                         echo '<img src="img/' . $fila['Portada'] . '" alt="Portada cargada" width="70" height="80">';
                                     } ?> </td>
+                                <td><?= $fila['Autor'] ?></td>
 
                                 <!--Modificamos el estado-->
                                 <td><?php if (($fila['Estado']) == 0) {
@@ -176,9 +181,9 @@ ON
                         } elseif ($rolUsuario == 1) { ?>
                             <!--Mostramos los libros que no coincidan y esten LIBRES o PRESTADOS-->
                             <?php if (($fila['Estado'] == 0 || $fila['Estado'] == 1) && ($ideantiguo != $idenuevo) && ($isbneantiguo != $isbnenuevo)) { ?>
-                                <td><?= $fila['IdEjemplar'] ?></td>
+                                
                                 <?php $delidejemplar = $fila['IdEjemplar']  ?>
-                                <?php $delisbn = $fila['ISBN'] ?>
+                                <td><?php echo  $delisbn = $fila['ISBN'] ?></td>
                                 <td><?= $fila['Titulo'] ?></td>
                                 <?php $deltitulo = $fila['Titulo'] ?>
                                 <td><?=
@@ -191,6 +196,7 @@ ON
                                 <td><?php if ($fila['Portada'] != null) {
                                         echo '<img src="img/' . $fila['Portada'] . '" alt="Portada cargada" width="70" height="80">';
                                     } ?> </td>
+                                    <td><?= $fila['Autor'] ?></td>
                                 <!--Modificamos el estado-->
                                 <td><?php if (($fila['Estado']) == 0) {
                                         echo "Libre";
@@ -198,25 +204,26 @@ ON
                                         echo "Prestado";
                                     } ?></td>
 
-                                <!--Boton editar-->
+                                <!-------------Boton editar------------->
                                 <td>Editar<a class="navbar-brand d-block" href="actLibro.php?rol=<?php echo $rolUsuario; ?>&idEje=<?php echo $delidejemplar ?>&nombre=<?php echo $nombre; ?>&idProf=<?php echo $idProf; ?>&isbn=<?php echo $delisbn; ?>&titulo=<?php echo $deltitulo; ?>"><img class="mx-auto" width="50" height="50" src="img/editarLibro.png" alt="editarLibro"></a></td>
 
-                                <!--Boton eliminar-->
-                                <td> <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar"
-                                        data-id="<?php echo htmlspecialchars($delidejemplar) ?>"
-                                        data-titulo="<?php echo htmlspecialchars($deltitulo); ?>"
-                                        data-editorial="<?php echo htmlspecialchars($deleditorial); ?>"
-                                        data-isbn="<?php echo htmlspecialchars($delisbn); ?>">
-                                        <img class="mx-auto" src="img/eliminarLibro.png" alt="eliminar usuario" width="40" height="40">
-                                        Eliminar
-                                    </button></td>
-
+                                <!------------Boton eliminar------------>
+                                <!--Si esta libre y no tiene pestamo activos ELIMNAR-->
+                                <?php if ($fila['Fecha_Fin'] =! null && ($fila['Estado']) == 0) { ?>
+                                    <td> <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar"
+                                            data-id="<?php echo htmlspecialchars($delidejemplar) ?>"
+                                            data-titulo="<?php echo htmlspecialchars($deltitulo); ?>"
+                                            data-editorial="<?php echo htmlspecialchars($deleditorial); ?>"
+                                            data-isbn="<?php echo htmlspecialchars($delisbn); ?>">
+                                            <img class="mx-auto" src="img/eliminarLibro.png" alt="eliminar usuario" width="40" height="40">
+                                            Eliminar
+                                        </button></td>
+                                <?php } ?>
 
                                 <!--En caso de estar libre el libro Solicitar Prestamo-->
                                 <?php if (($fila['Estado']) == 0) { ?>
                                     <td>Solicitar<a class="navbar-brand d-block" href="solicitarPrestamo.php?rol=<?php echo $rolUsuario; ?>&idEje=<?php echo $delidejemplar ?>&nombre=<?php echo $nombre; ?>&idProf=<?php echo $idProf; ?>&isbn=<?php echo $delisbn; ?>&titulo=<?php echo $deltitulo; ?>"><img class="d-block mx-auto" width="40" height="40" src="img/prestamoLibro.png" alt="solicitar prestamo">Préstamo</a></td>
                                 <?php } else { ?>
-
                                     <!-- Botón para Fin Préstamo-->
                                     <td>
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDevolucion"
@@ -225,9 +232,7 @@ ON
                                             data-titulo="<?php echo $deltitulo; ?>">
                                             <img class="d-block mx-auto" width="40" height="40" src="img/devolverPrestamo.png" alt="Devolver Libro">Fin Préstamo
                                         </button>
-                                    </td>
-                                    <!--Incluimos el modal para fin del prestamo-->
-
+                                    </td>                                    
                                 <?php } ?>
                             <?php } ?>
                     </tr>
@@ -236,6 +241,7 @@ ON
                     $idenuevo =  $fila['IdEjemplar'];
                     $isbnenuevo =  $fila['ISBN'];
                 } ?>
+                <!--Incluimos el modal para fin del prestamo-->
             <?php include 'finPrestamo.php'; ?>
             </tbody>
         </table>

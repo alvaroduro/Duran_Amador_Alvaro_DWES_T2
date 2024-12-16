@@ -38,12 +38,6 @@ if (isset($_GET['rol']) && isset($_GET['nombre'])) {
                 <img class="mx-2" src="img/listarLibros.png" alt="listarLibro" width="30" height="30">Listar, Agregar, Editar o Eliminar Libro
             </a>
 
-            <!-- resgistrar Prestamos libro -->
-            <a href="registrarPrestamo.html" class="btn btn-success btn-lg shadow-sm">
-                <img class="mx-2" src="img/registroLibro.png" alt="registroLibro" width="30" height="30">Registrar Préstamo
-            </a>
-
-            <!-- Estado préstamos -->
             <!-- Estado préstamos -->
             <a href="listarPrestamos.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $idProf; ?>&nombre=<?php echo $nombre; ?>" class="btn btn-light btn-lg shadow-sm">
                 <img class="mx-2" src="img/prestamosLibro.png" alt="estadoPrestamos" width="30" height="30">Estado Préstamos

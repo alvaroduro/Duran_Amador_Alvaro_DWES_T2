@@ -44,7 +44,7 @@
             $isbn = $_POST['isbn'];
             $fechaPubli = $_POST['fechaPubli'];
             $editorial = $_POST['editorial'];
-            $descripcion = $_POST['descripcion'];
+            $descripcion = strip_tags($_POST['descripcion']);
             $precio = $_POST['precio'];
             $autor = $_POST['autor'];
             $estado = 0;
