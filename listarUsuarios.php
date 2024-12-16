@@ -21,9 +21,40 @@ if (isset($_GET['rol'])) {
     echo "No se recibió ningún rol.";
 }
 
+//Vemos los profesores que tienen prestamos activos
 try {
     // Escribimos la consulta
-    $sql = "SELECT * FROM profesores";
+    $sql = "SELECT DISTINCT IdProf FROM prestamos WHERE Fecha_Fin IS NULL";
+    // Preparamos la consulta
+    $resultadoFechafin = $conexion->prepare($sql);
+    // Ejecutamos la consulta
+    $resultadoFechafin->execute();
+
+    //Si hay datos en la consulta
+    if ($resultadoFechafin) {
+        //Guardamos en un arra los resultados
+        $filaFin = $resultadoFechafin->fetch(PDO::FETCH_ASSOC);
+        $msgresultado = '<div class="alert alert-success mx-2">' . "La consulta se realizó correctamente!!" . '<img width="50" height="50" src="https://img.icons8.com/clouds/100/ok-hand.png" alt="ok-hand"/></div>';
+    } //o no
+} catch (PDOException $ex) {
+    $msgresultado = '<div class="alert alert-danger w-100 mx-2">' . "Fallo al realizar al consulta a la Base de Datos!!" . '<img class="mx-2" width="50" height="50" src="https://img.icons8.com/cute-clipart/64/error.png" alt="error"/></div>';
+    die();
+}
+
+
+try {
+    // Escribimos la consulta
+    $sql = "SELECT profesores.*, 
+    prestamos.IdProf AS Prestamo_IdProf, 
+    prestamos.Fecha_Fin 
+FROM 
+    profesores
+LEFT JOIN 
+    prestamos 
+ON 
+    profesores.IdProf = prestamos.IdProf
+GROUP BY 
+    profesores.IdProf";
     // Preparamos la consulta
     $resultado = $conexion->prepare($sql);
     // Ejecutamos la consulta
@@ -83,7 +114,7 @@ try {
             </thead>
             <tbody>
                 <!--Recogemos resultados-->
-                <?php while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) { ?>
+                <?php while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) { //var_dump($fila) ?>
                     <tr>
                         <!--<td><?= $fila['IdProf'] ?></td>-->
                         <?php $delid = $fila['IdProf'] ?>
@@ -108,8 +139,8 @@ try {
                         <!--Damos el rol por si es admin y el idprof del usuario-->
                         <td> <a href="actUsuario.php?rol=<?php echo $rolUsuario; ?>&idProf=<?php echo $delid ?>&nombre=<?php echo $nombre; ?>"><img width="40" height="40" src="img/editarUsuario.png" alt="editar usuario"></a>Editar</td>
                         <td>
-                            <!--Solo eliminamos los usuarios que no son admin, mostramos el botón eliminar-->
-                            <?php if($fila['Rol'] == 0) {?>
+                            <!--Solo eliminamos los usuarios que no son admin y no tienen prestamos activos, mostramos el botón eliminar-->
+                            <?php if($fila['Rol'] == 0  && !in_array($delid, $filaFin)) {?>
                                 <!--Boton eliminar-->
                                 <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalEliminar"
                                 data-id="<?php echo htmlspecialchars($delid) ?>"
