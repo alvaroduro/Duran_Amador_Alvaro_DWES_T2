@@ -89,6 +89,10 @@ ON
 
             <?php } ?>
 
+            <!--Generar PDF-->
+            <a href="generarPDF.php" class="navbar-brand mx-2">Descargar PDF libros<img class="mx-2" width="40" height="40" src="img/pdf.png" alt="pdf libro"></a>
+
+
             <!--Salir login-->
             <a class="navbar-brand mx-2" href="index.php">Salir<img class="mx-2" src="img/exit.png" alt="salir" width="40" height="40"></a>
         </div>
